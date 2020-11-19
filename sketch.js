@@ -8,6 +8,7 @@ var attackArray;
 var gameState = "PLAY";
 var obstacleImg;
 var flag = 0;
+var score = 0;
 
 function preload(){
   birdImg = loadImage("sprites/bird.png");
@@ -45,7 +46,9 @@ function setup() {
 function draw() {
   background(255,255,255); 
   camera.position.x = bird.x;
-
+  
+  //console.logs the y position of the bird
+  console.log(bird.y);
   //sets the collider
   bird.setCollider("circle",0,0,25);
 
@@ -61,8 +64,9 @@ function draw() {
   
 
   //makes the bird go up when necessary
-  if(keyWentDown(UP_ARROW)){
+  if(keyWentDown("UP_ARROW") && bird.y > 300){
     bird.velocityY = -15;
+    score = score + 1;
   }
 
   if(bird.isTouching(obstaclesGrp)){
@@ -82,9 +86,9 @@ function draw() {
     reset();
   }
   bird.collide(ground);
-  console.log(gameState);
   
-  drawSprites();
+  
+  drawSprites(); 
 
   if(flag === 1 && gameState === "END"){
     textSize(50);
@@ -92,6 +96,11 @@ function draw() {
     text("Oops! You lost! Press R to restart!",camera.position.x-400,camera.position.y);
     obstaclesGrp.setLifetimeEach(-1);
   }
+
+  //creates the score
+  fill(0);
+  text("Score:"+score,bird.x + 200,200);
+  
 }
 
 function spawnObstacles(){
@@ -102,8 +111,6 @@ function spawnObstacles(){
     obstacle.lifetime = 100;
     obstacle.x = camera.position.x + width/2;
     obstaclesGrp.add(obstacle);
-
-    
   }
 }
 
@@ -112,3 +119,4 @@ function reset(){
   bird.velocityX = 7;
   gameState = "PLAY";
 }
+
